@@ -21,16 +21,17 @@ echo -e "${YELLOW}  Start Time : $(date)${RESET}"
 
 echo -e "${WHITE}────────────────────────────────────────────────────────────────────────────${RESET}"
 
-# Información del sistema
-echo -e "${CYAN}[+] Target Information${RESET}"
+
+echo -e "${CYAN}[+] Información del objetivo${RESET}"
 echo -e "    ├─ Hostname : $(hostname)"
 echo -e "    ├─ User     : $(whoami)"
 echo -e "    ├─ UID      : $(id -u)"
 echo -e "    ├─ Kernel   : $(uname -r)"
 echo -e "    └─ OS       : $(grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d '\"')"
 
+#ESCANEO
 echo
-echo -e "${GREEN}[+] Initializing local enumeration modules...${RESET}"
+echo -e "${GREEN}[+] Iniciando enumeración local...${RESET}"
 sleep 1
 
 echo -e "${RED}\nUsuarios Activos\n${RESET}"
@@ -50,3 +51,11 @@ echo -e "${RED}\nTareas Cron\n${RESET}"
 ls -la /etc/cron*
 echo -e "\n"
 tail -n6 /etc/crontab
+
+echo -e "${RED}\nBuscando archivos especificos\n${RESET}"
+
+find / -type f -name "*.conf" -o -name "*.env" -o -name "*.php" -name "*.sh" -name "*.py" 2>/dev/null |  grep -e "pass" -e "db" -e "api" -e "key"
+
+echo -e "${RED}\nServicios activos\n${RESET}"
+
+systemctl list-units --type=service --state=active | grep "active"
